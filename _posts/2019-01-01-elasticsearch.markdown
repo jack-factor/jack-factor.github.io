@@ -4,7 +4,7 @@ title:  "Elastic Search"
 date:   2019-01-01 12:17:00 -0500
 categories: elasticsearch
 ---
-Es un motor de búsqueda full text y de análisis open source de alta escalabilidad. Permite buscar, almacenar, analizar altos volumenes de data en  tiempo muy cerca al real.
+Es un motor de búsqueda full text y de análisis open source de alta escalabilidad. Permite buscar, almacenar, analizar altos volúmenes de data en  tiempo muy cerca al real.
 
 ## Casos de uso:
 
@@ -14,57 +14,74 @@ Es un motor de búsqueda full text y de análisis open source de alta escalabili
 * Minería y análisis de datos.
 
 
-## Conceptos básicos
-Near Realtime(NRT): Cerca al tiempo real.
-Cluster: Grupo de nodos(servidores)
-Node: Un servidor que es parte de un cluster
-Index: Colección de documentos
-Document: Es la unidad básica que puede estar indexada
-Shardd y réplicas:
+## Conceptos básicos:
 
-## Explorando el cluster
-Provee de un poderoso api rest para inter-actuar con el cluster
-* Revisar el cluster.
-* Administración el cluster.
-* CRUD en el  index.
+Hay algunos conceptos básicos que se deben entender antes de continuar:
+
+* Near Realtime(NRT): Cerca al tiempo real.
+* Cluster: Grupo de nodos(servidores).
+* Node(nodo): Un servidor que es parte de un cluster.
+* Index: Colección de documentos.
+* Document: Es la unidad básica que puede estar indexada.
+* Shards y réplicas: Elasticsearch puede almacenar enormes cantidades de información en un nodo, sobre pasando los limites del hardware dándonos como consecuencia tiempos de respuesta muy lentos.
+Para resolver este problema elasticsearch ofrece subdividir un index en varias partes llamadas `shards`.
+Cuando se crea un index puedes definir la cantidad de shards que tu quieras. [Leer más aquí][fuente-02]
+
+## Instalación:
+
+La documentación nos explica como instalar elasticsearch en distintos sistemas operativos. [Leer más aquí][fuente-03]
+
+## Explorando el cluster:
+
+Elasticsearch nos provee de un poderoso api-rest para interactuar con el cluster. Las cosas que puedes hacer con el api-rest son las siguientes:
+
+* Revisar la salud, el estado y estadísticas del cluster, nodo e index 
+* Administración de la data y métadata.
+* CRUD en el index y operaciones de búsqueda.
 * Ejecutar operaciones avanzadas de búsqueda.
 
 
-
-Revisar el cluster:
+## Revisar el cluster:
 
 Para revisar la salud del cluster nos vamos apoyar del Api `_cat` 
 Ejemplo:
 
 {% highlight python %}
 
- GET /_cat/health?v\
+    curl -X GET "localhost:9200/_cat/health?v"
 
 {% endhighlight %}
 
-Cantida de nodos:
+Cuando preguntamos por la salud de nuestro cluster notaremos que en el `status` obtendremos uno de estos tres colores:
+* Verde: Todo esta bien (El cluster funciona completamente).
+* Amarillo: Todo la data esta disponible pero las replicas no están disponibles (El cluster funciona completamente).
+* Rojo: Algo de la data no esta disponible por alguna razón ( El cluster funciona parcialmente).
+
+Por defecto elasticsearch trae un nodo con 0 particiones.
+listar la cantida de nodos:
 
 {% highlight python %}
 
- GET /_cat/nodes?v
+    curl -X GET "localhost:9200/_cat/nodes?v"
 
 {% endhighlight %}
 
 
 ### Administración de índices
-Lista de índices
+
+Lista de índices. En un pricipicio no encontraremos indices.
 
 {% highlight python %}
 
-  GET /_cat/indices?v
+    curl -X GET "localhost:9200/_cat/indices?v"
 
 {% endhighlight %}
 
-Creación de índices
+### Creación de índices
 
 {% highlight python %}
 
- PUT /customer?pretty
+     curl -X PUT "localhost:9200/customer?pretty"
 
 {% endhighlight %}
 
@@ -219,3 +236,5 @@ Ejemplo de actualización y eliminación
 
 
 [fuente-01]: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+[fuente-02]: https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started-concepts.html
+[fuente-03]: https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started-install.html
