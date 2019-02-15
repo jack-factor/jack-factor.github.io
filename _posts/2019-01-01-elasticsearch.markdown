@@ -90,56 +90,63 @@ Si listamos los indices podremos obtener la siguiente información:
 
 {% highlight shell %}
 
-health status index          uuid                                                  pri rep docs.count docs.deleted store.size pri.store.size
-yellow open   customer jmv3gwMCQCKOxD_oSFkY5Q   5   1          0            0      1.1kb          1.1kb
+health status index          uuid              pri rep docs.count ...
+yellow open   customer jmv3gwMCQCKOxD_oSFkY5Q   5   1          0  ...
 
 {% endhighlight %}
 
-Nos indica que nuestro indice tiene 5 particiones primarias 1 replica y 0 documentos además que la salud del índice es amarrillo. 
-Esto es porque tiene un indice que no ha sido asignado a ningún nodo todavía. Cuando el nodo sea asignado el estado pasara a verde.
+Nos indica que nuestro indice tiene 5 particiones primarias 1 replica y 0 documentos además que la salud del índice es amarillo. 
+Esto es porque tiene un replica que no ha sido asignado a ningún nodo todavía. Cuando el nodo sea asignado el estado pasara a verde. Por defecto elasticsearch nos crea una replica.
 
 ### Indexs y querys
 
-Subir un documento al index "customer" con el ID 1
+Subir un documento al index "customer" con el ID 1.
+Después de insetar nuestro primer documento se creará automáticamente el index customer.
 
 {% highlight shell %}
 
- PUT /customer/_doc/1?pretty
- { "name": "John Doe" }
+ curl -X PUT "localhost:9200/customer/_doc/1?pretty" -H 'Content-Type: application/json' -d '
+ {"name": "John Doe"}'
 
 {% endhighlight %}
 
-Consultar documento
+Consultar el documento recién indexado
 
 {% highlight shell %}
 
- /customer/_doc/1?pretty
+ curl -X GET "localhost:9200/customer/_doc/1?pretty"
 
 {% endhighlight %}
 
-Delete index
+Eliminar índice customer
 
 {% highlight shell %}
 
-DELETE /customer?pretty
+ curl -X DELETE "localhost:9200/customer?pretty"
 
 {% endhighlight %}
 
-consultar:
+Si todo ha salido bien al consultar ya no veremos nuestro índice customer:
+
 {% highlight shell %}
 
- GET /_cat/indices?v
+ curl -X GET "localhost:9200/_cat/indices?v"
 
 {% endhighlight %}
 
-Resumen de comando
+### Resumen de comando
 {% highlight shell %}
 
- PUT /customer
- PUT /customer/_doc/1 
- { "name": "John Doe" } 
- GET /customer/_doc/1 
- DELETE /customer
+ curl -X PUT "localhost:9200/customer"
+
+ curl -X PUT "localhost:9200/customer/_doc/1" -H 'Content-Type: application/json' -d'
+ {
+  "name": "John Doe"
+ }'
+ 
+ curl -X GET "localhost:9200/customer/_doc/1"
+ 
+ curl -X DELETE "localhost:9200/customer"
 
 {% endhighlight %}
 
@@ -149,8 +156,9 @@ Re llamar el enpoint para modificar el documento
 
 {% highlight shell %}
 
- PUT /customer/_doc/1?pretty 
- { "name": "Jane Doe" }
+ curl -X PUT "localhost:9200/customer/_doc/1?pretty" -H 'Content-Type: application/json' -d 
+ '{"name": "John Doe"}'
+
 
 {% endhighlight %}
 
@@ -158,21 +166,23 @@ Registrar sin especificar el ID
 
 {% highlight shell %}
 
- POST /customer/_doc?pretty 
- { "name": "Jane Doe" }
+ curl -X POST "localhost:9200/customer/_doc?pretty" -H 'Content-Type: application/json' -d
+ '{
+  "name": "Jane Doe"
+ }'
+
 
 {% endhighlight %}
 
 Al hacer esto el propio elasticsearch le asigna un hash como id
-Modificar/Actualizar
+
+### Modificar/Actualizar
 Modificando un nombre
 
 {% highlight shell %}
 
- POST /customer/_doc/1/_update?pretty 
- { "doc": 
-            { "name": "Jane Doe" } 
- }
+ curl -X POST "localhost:9200/customer/_doc/1/_update?pretty" -H 'Content-Type: application/json' -d
+ '{"doc": { "name": "Jane Doe" }}'
 
 {% endhighlight %}
 
@@ -180,10 +190,9 @@ Moficando y agregando una columna
 
 {% highlight shell %}
 
- POST /customer/_doc/1/_update?pretty 
- { "doc": 
-    { "name": "Jane Doe", "age": 20 } 
- }
+ curl -X POST "localhost:9200/customer/_doc/1/_update?pretty" -H 'Content-Type: application/json' -d
+ '{"doc": { "name": "Jane Doe", "age": 20 }}'
+
 
 {% endhighlight %}
 
@@ -191,8 +200,8 @@ Actualizar determinada columna y autoincrementar
 
 {% highlight shell %}
 
- POST /customer/_doc/1/_update?pretty 
- { "script" : "ctx._source.age += 5" }
+ curl -X POST "localhost:9200/customer/_doc/1/_update?pretty" -H 'Content-Type: application/json' -d
+ '{"script" : "ctx._source.age += 5"}'
 
 {% endhighlight %}
 
@@ -202,7 +211,7 @@ Eliminando documento
 
 {% highlight shell %}
 
- DELETE /customer/_doc/2?pretty
+ curl -X DELETE "localhost:9200/customer/_doc/2?pretty"
 
 {% endhighlight %}
 
