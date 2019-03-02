@@ -1,0 +1,62 @@
+---
+layout: post
+title:  "Gitflow"
+date:   2019-01-28 12:17:00 -0500
+categories: gitflow
+---
+
+## UN POCO DE HISTORIA
+
+Publicado y popularizado por [Vincent Driessen][fuente-01] 2010
+
+## ¿QUÉ ES?
+
+Principalmente es un flujo de trabajo. Este flujo de trabajo es flexible y adaptable a cualquier modelo de negocio.
+
+* "Asigna roles sobre las ramas e indica como interactuar entre ellas"
+* "No intentan agregar nuevos conceptos o nuevos comandos"
+* Se apoya en el sistema de control de versiones GIT.
+
+
+## LA HERRAMIENTA:
+
+
+Hay una extensión que hace tangible el flujo de trabajo "GIt-FLow".
+Git flow nos trae comandos que nos permite gestionar las ramas de manera más sencilla.
+
+![](https://nvie.com/img/git-model@2x.png)
+imagen: https://nvie.com
+
+
+## INSTALACiÓN:
+* Linux : sudo apt install git-flow
+
+## RAMAS PRINCIPALES: 
+
+Master y Develop (Se recomienda evitar su manipulación directa)
+
+* Master: Lo que consideramos que pasará a producción
+* Develop: Características futuras que pasarán a master
+
+### RAMAS AUXILIARES:
+
+Feature, release y hotfix
+
+* Feature: Nace de "develop" y en ella se añaden nuevas características o se resuelven tareas que al terminar volverán a develop
+* Release: Nace de "develop". Te permite generar un tag a partir del nombre del release. Todos los cambios generados en las ramas features pasarán a develop y master cerrando  realease.
+* Hotfix: Nace de master, sirve para en el hacer modificaciones que requieren de mucha atención o se necesite que este los más pronto en producción al cerrar el hotfix este hace el con master y develop.
+
+
+## CONCLUSIÓN:
+
+Los comandos son suficientes para adoptar este flujo de trabajo
+
+## FUENTES:
+
+[https://nvie.com/posts/a-successful-git-branching-model/][fuente-01]
+[https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow][fuente-02]
+[http://danielkummer.github.io/git-flow-cheatsheet/][fuente-03]
+
+[fuente-01]: https://nvie.com/posts/a-successful-git-branching-model/
+[fuente-02]: https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
+[fuente-03]: http://danielkummer.github.io/git-flow-cheatsheet/
